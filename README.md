@@ -13,5 +13,5 @@ Bootstrap is used for styling the application's user interface.
 ## Usage 
 The app has been deployed and can be viewed in a web browser. 
 
-![Screenshot](image.png)
+[Screenshot](image.png)
 
