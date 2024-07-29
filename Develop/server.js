@@ -11,14 +11,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
-// HTML routes
-app.get('/notes', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'notes.html'));
-});
-
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
 
 // API routes
 app.get('/api/notes', (req, res) => {
@@ -27,7 +19,13 @@ app.get('/api/notes', (req, res) => {
       console.error('Error reading notes:', err);
       return res.status(500).json({ error: 'Failed to read notes' });
     }
-    res.json(JSON.parse(data));
+    try {
+      const notes = JSON.parse(data);
+      res.json(notes);
+    } catch (parseError) {
+      console.error('Error parsing notes data:', parseError);
+      res.status(500).json({ error: 'Failed to parse notes data' });
+    }
   });
 });
 
@@ -49,6 +47,15 @@ app.post('/api/notes', (req, res) => {
       res.json(newNote);
     });
   });
+});
+
+// HTML routes
+app.get('/notes', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'notes.html'));
+});
+
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Bonus: Delete route
